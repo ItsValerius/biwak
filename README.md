@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Biwak – Karneval Ablauf
 
-## Getting Started
+Live-Ablauftafel für Karneval-Veranstaltungen: öffentliche Ansicht (Ablauf, aktuell auf der Bühne, Verzögerung, nächste Clubs) und Admin-Ansicht (nur Buttons: „Jetzt auf die Bühne“, optional Pause/Umbau).
 
-First, run the development server:
+## Tech
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js 16** (App Router), **React 19**, **Tailwind v4**, **shadcn/ui**
+- **SQLite** (lokal: Datei) + **Turso** (Produktion) mit **Drizzle ORM** und **libsql**
+- **Vercel** für Hosting
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Lokal starten
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Abhängigkeiten installieren:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   bun install
+   ```
 
-## Learn More
+2. Umgebungsvariablen anlegen (siehe `.env.example`):
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   cp .env.example .env
+   # TURSO_DATABASE_URL (z. B. file:./data/biwak.db) und ADMIN_PASSWORD eintragen
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Für lokales SQLite: Verzeichnis anlegen und Schema anwenden:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   mkdir -p data
+   bun run db:push
+   ```
 
-## Deploy on Vercel
+4. Seed ausführen (ein Event + Slots):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   bun run db:seed
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Dev-Server starten:
+
+   ```bash
+   bun run dev
+   ```
+
+- **Öffentliche Ansicht:** [http://localhost:3000](http://localhost:3000)
+- **Admin:** [http://localhost:3000/admin](http://localhost:3000/admin) (Passwort aus `ADMIN_PASSWORD`)
+
+## Deploy auf Vercel
+
+1. Repo mit Vercel verbinden.
+2. **Turso**-Datenbank anlegen ([turso.tech](https://turso.tech)), URL und Auth Token holen.
+3. Env-Variablen in Vercel setzen:
+   - `TURSO_DATABASE_URL` (Turso-URL, z. B. `libsql://…`)
+   - `TURSO_AUTH_TOKEN` (Turso Auth Token)
+   - `ADMIN_PASSWORD` (gewünschtes Admin-Passwort)
+4. Build: `next build` (Standard).
+5. Nach dem ersten Deploy einmal Schema und Seed ausführen:
+   - Schema: lokal `bun run db:push` mit Production-`TURSO_DATABASE_URL` und `TURSO_AUTH_TOKEN`.
+   - Seed: einmal lokal mit denselben Turso-Env-Variablen `bun run db:seed`.
+
+## Skripte
+
+| Befehl        | Beschreibung                    |
+|---------------|----------------------------------|
+| `bun run dev` | Entwicklungsserver               |
+| `bun run build` | Production-Build              |
+| `bun run start` | Production-Server (nach build) |
+| `bun run db:push` | Drizzle-Schema in DB anwenden |
+| `bun run db:generate` | Drizzle-Migrationen erzeugen |
+| `bun run db:seed` | Ein Event + Slots anlegen     |
+
+## Datenmodell
+
+- **Event:** `id`, `name`, `location`, `status` (`running` \| `pause_umbau`), `current_slot_id`
+- **ScheduleSlot:** `id`, `event_id`, `club_name`, `planned_start`, `order_index`, `actual_start` (wird beim Klick „Jetzt auf die Bühne“ gesetzt)
