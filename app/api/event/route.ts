@@ -4,10 +4,7 @@ import { jsonError, jsonSuccess } from "@/lib/api";
 import { HTTP_STATUS, ERROR_MESSAGE } from "@/lib/constants";
 
 export async function GET(request: NextRequest) {
-  const eventId =
-    request.nextUrl.searchParams.get("eventId") ??
-    process.env.NEXT_PUBLIC_DEFAULT_EVENT_ID ??
-    undefined;
+  const eventId = request.nextUrl.searchParams.get("eventId") ?? undefined;
 
   const result = await getEventWithSlots(eventId);
 

@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Biwak – Karneval Ablauf",
-  description: "Live-Ablauf für Karneval-Veranstaltungen",
+  title: "Biwak – Karneval",
+  description: "Live-Programm für Karneval-Veranstaltungen",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

@@ -11,6 +11,7 @@ import {
 } from "@/lib/event/client";
 import { EVENT_STATUS } from "@/lib/constants";
 import { fetchEvent } from "@/lib/api";
+import { CalendarX } from "lucide-react";
 import { EventBoardHeader } from "./EventBoardHeader";
 import { EventBoardNowOnStage } from "./EventBoardNowOnStage";
 import { EventBoardUpNext } from "./EventBoardUpNext";
@@ -65,11 +66,30 @@ export function EventBoard({ initialData }: EventBoardProps) {
   }, []);
 
   if (errorMessage && !boardData) {
+    const isNoEvent = errorMessage === ERROR_NO_EVENT;
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
-        <p className="text-muted-foreground text-[clamp(1rem,2vw,2.5rem)]">
-          {errorMessage}
-        </p>
+        <div className="flex max-w-sm flex-col items-center gap-4 text-center">
+          {isNoEvent ? (
+            <>
+              <div className="flex size-16 items-center justify-center rounded-full bg-muted lg:size-20">
+                <CalendarX className="size-8 text-muted-foreground lg:size-10" />
+              </div>
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-foreground lg:text-2xl">
+                  Kein Live-Event
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  Es ist aktuell kein Event auf der Startseite eingestellt.
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="text-muted-foreground text-[clamp(1rem,2vw,2.5rem)]">
+              {errorMessage}
+            </p>
+          )}
+        </div>
       </div>
     );
   }

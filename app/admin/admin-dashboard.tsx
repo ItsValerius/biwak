@@ -7,11 +7,14 @@ import {
   swapSlots,
   deleteSlot,
   togglePause,
+  resetEventSlots,
 } from "./actions";
 import type { EventWithSlots } from "@/lib/event/client";
-import { AdminEventHeader } from "@/components/admin/AdminEventHeader";
-import { AdminPauseButton } from "@/components/admin/AdminPauseButton";
-import { AdminSlotList } from "@/components/admin/AdminSlotList";
+import {
+  AdminEventHeader,
+  AdminNextButton,
+  AdminSlotList,
+} from "@/components/admin";
 
 type AdminDashboardProps = {
   event: EventWithSlots["event"];
@@ -42,19 +45,27 @@ export function AdminDashboard({ event, slots }: AdminDashboardProps) {
     router.refresh();
   }
 
+  async function handleResetSlots() {
+    await resetEventSlots(event.id);
+    router.refresh();
+  }
+
   return (
     <div className="space-y-6">
       <AdminEventHeader event={event} />
-      <AdminPauseButton
-        isPaused={isPaused}
-        onToggle={handleTogglePause}
+      <AdminNextButton
+        slots={slots}
+        currentSlotId={event.currentSlotId}
+        onSetCurrentSlot={handleSetCurrentSlot}
       />
       <AdminSlotList
         event={event}
         slots={slots}
-        onSetCurrentSlot={handleSetCurrentSlot}
+        isPaused={isPaused}
         onSwapSlots={handleSwapSlots}
         onDeleteSlot={handleDeleteSlot}
+        onTogglePause={handleTogglePause}
+        onResetSlots={handleResetSlots}
       />
     </div>
   );

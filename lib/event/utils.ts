@@ -1,19 +1,6 @@
-export type Slot = {
-  id: string;
-  eventId: string;
-  clubName: string;
-  plannedStart: string;
-  orderIndex: number;
-  actualStart: string | null;
-};
+import type { Slot } from "./types";
 
-export type Event = {
-  id: string;
-  name: string;
-  location: string;
-  status: "running" | "pause_umbau";
-  currentSlotId: string | null;
-};
+export type { Slot, Event } from "./types";
 
 export function getCurrentSlot(slots: Slot[], currentSlotId: string | null): Slot | null {
   if (!currentSlotId) return null;

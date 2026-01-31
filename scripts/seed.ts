@@ -1,40 +1,31 @@
 import "dotenv/config";
-import { db } from "../lib/db/index";
-import { events, scheduleSlots } from "../lib/db/schema";
+import { createEvent, createSlots } from "../lib/event";
 
 async function seed() {
-  const [event] = await db
-    .insert(events)
-    .values({
-      name: "Karneval Biwak 2025",
-      location: "Hauptbühne",
-      status: "running",
-    })
-    .returning();
+  const eventResult = await createEvent({
+    name: "Karneval Biwak 2025",
+    location: "Hauptbühne",
+  });
 
-  if (!event) {
-    throw new Error("Failed to create event");
+  if (eventResult.error || !eventResult.id) {
+    throw new Error(eventResult.error ?? "Failed to create event");
   }
 
   const now = new Date();
   const slots = [
-    { clubName: "Club Rot-Weiss", plannedStart: new Date(now.getTime()), orderIndex: 0 },
-    { clubName: "Närrische Garde", plannedStart: new Date(now.getTime() + 15 * 60 * 1000), orderIndex: 1 },
-    { clubName: "Tanzgruppe Blau", plannedStart: new Date(now.getTime() + 30 * 60 * 1000), orderIndex: 2 },
-    { clubName: "Musikverein Grün", plannedStart: new Date(now.getTime() + 45 * 60 * 1000), orderIndex: 3 },
-    { clubName: "Jugendclub Gelb", plannedStart: new Date(now.getTime() + 60 * 60 * 1000), orderIndex: 4 },
+    { clubName: "Club Rot-Weiss", plannedStart: new Date(now.getTime()).toISOString() },
+    { clubName: "Närrische Garde", plannedStart: new Date(now.getTime() + 15 * 60 * 1000).toISOString() },
+    { clubName: "Tanzgruppe Blau", plannedStart: new Date(now.getTime() + 30 * 60 * 1000).toISOString() },
+    { clubName: "Musikverein Grün", plannedStart: new Date(now.getTime() + 45 * 60 * 1000).toISOString() },
+    { clubName: "Jugendclub Gelb", plannedStart: new Date(now.getTime() + 60 * 60 * 1000).toISOString() },
   ];
 
-  await db.insert(scheduleSlots).values(
-    slots.map((s) => ({
-      eventId: event.id,
-      clubName: s.clubName,
-      plannedStart: s.plannedStart,
-      orderIndex: s.orderIndex,
-    }))
-  );
+  const slotsResult = await createSlots(eventResult.id, slots);
+  if (slotsResult.error) {
+    throw new Error(slotsResult.error);
+  }
 
-  console.log("Seed complete. Event ID:", event.id);
+  console.log("Seed complete. Event ID:", eventResult.id);
 }
 
 seed().catch(console.error).finally(process.exit);

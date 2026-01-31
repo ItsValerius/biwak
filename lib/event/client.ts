@@ -11,5 +11,5 @@ export {
   type Slot,
   type Event,
 } from "./utils";
-
-export type { GetEventResponse, GetEventResponse as EventWithSlots } from "@/lib/api";
+export type { EventWithSlots } from "./types";
+export type { GetEventResponse } from "@/lib/api";

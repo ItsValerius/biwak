@@ -1,6 +1,22 @@
+/**
+ * Event domain: server-side service (DB operations) and utilities.
+ * For client components, use "@/lib/event/client" instead.
+ */
 export {
   getEventWithSlots,
   listEvents,
+  getActiveEventId,
+  setCurrentSlot,
+  swapSlots,
+  deleteSlot,
+  togglePause,
+  createEvent,
+  createSlots,
+  updateSlot,
+  updateEvent,
+  setActiveEvent,
+  unsetActiveEvent,
+  resetSlotsActualStart,
   type EventWithSlots,
   type SerializedSlot,
 } from "./service";

@@ -27,6 +27,11 @@ export const scheduleSlots = sqliteTable("schedule_slots", {
   actualStart: integer("actual_start", { mode: "timestamp_ms" }),
 });
 
+export const appConfig = sqliteTable("app_config", {
+  key: text("key").primaryKey(),
+  value: text("value"),
+});
+
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
 export type ScheduleSlot = typeof scheduleSlots.$inferSelect;
