@@ -241,6 +241,22 @@ export async function resetSlotsActualStart(eventId: string): Promise<{ error?: 
   return {};
 }
 
+export async function deleteEvent(eventId: string): Promise<{ error?: string }> {
+  const event = await db.query.events.findFirst({
+    where: eq(events.id, eventId),
+    columns: { id: true },
+  });
+  if (!event) return { error: ERROR_MESSAGE.EVENT_NOT_FOUND };
+
+  const activeId = await getActiveEventId();
+  if (activeId === eventId) {
+    await unsetActiveEvent();
+  }
+  await db.delete(scheduleSlots).where(eq(scheduleSlots.eventId, eventId));
+  await db.delete(events).where(eq(events.id, eventId));
+  return {};
+}
+
 function serializeSlotForApi(slot: ScheduleSlot): SerializedSlot {
   return {
     id: slot.id,

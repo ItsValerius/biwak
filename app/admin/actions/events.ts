@@ -6,6 +6,7 @@ import {
   updateEvent as serviceUpdateEvent,
   setActiveEvent as serviceSetActiveEvent,
   unsetActiveEvent as serviceUnsetActiveEvent,
+  deleteEvent as serviceDeleteEvent,
 } from "@/lib/event";
 import { createEventSchema, updateEventSchema } from "@/lib/admin/schemas";
 import { ERROR_MESSAGE } from "@/lib/constants";
@@ -59,4 +60,12 @@ export async function unsetActiveEvent() {
   await requireAdmin();
   await serviceUnsetActiveEvent();
   revalidate();
+}
+
+export async function deleteEvent(eventId: string) {
+  await requireAdmin();
+  const result = await serviceDeleteEvent(eventId);
+  if (result.error) return { error: result.error };
+  revalidate();
+  redirect("/admin");
 }

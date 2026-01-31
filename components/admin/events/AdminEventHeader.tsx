@@ -5,6 +5,7 @@ import { MapPin, Pencil } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AdminEditEventDialog } from "./AdminEditEventDialog";
+import { AdminDeleteEventButton } from "./AdminDeleteEventButton";
 
 type Event = {
   id: string;
@@ -22,16 +23,22 @@ export function AdminEventHeader({ event }: { event: Event }) {
           <CardTitle className="min-w-0 wrap-break-word text-2xl font-semibold tracking-tight">
             {event.name}
           </CardTitle>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            onClick={() => setEditOpen(true)}
-            title="Event bearbeiten"
-            aria-label="Event bearbeiten"
-          >
-            <Pencil className="size-4" />
-          </Button>
+          <div className="flex shrink-0 gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={() => setEditOpen(true)}
+              title="Event bearbeiten"
+              aria-label="Event bearbeiten"
+            >
+              <Pencil className="size-4" />
+            </Button>
+            <AdminDeleteEventButton
+              eventId={event.id}
+              eventName={event.name}
+            />
+          </div>
         </CardHeader>
         <CardContent className="min-w-0 pt-0">
           <p className="flex min-w-0 items-center gap-2 wrap-break-word text-muted-foreground text-sm">

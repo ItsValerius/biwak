@@ -3,6 +3,7 @@ export { togglePause } from "./pause";
 export {
   createEvent,
   updateEvent,
+  deleteEvent,
   setActiveEvent,
   unsetActiveEvent,
 } from "./events";

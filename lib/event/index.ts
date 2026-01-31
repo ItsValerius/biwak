@@ -16,6 +16,7 @@ export {
   updateEvent,
   setActiveEvent,
   unsetActiveEvent,
+  deleteEvent,
   resetSlotsActualStart,
   type EventWithSlots,
   type SerializedSlot,

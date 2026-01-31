@@ -5,6 +5,7 @@ export { AdminPauseButton } from "./AdminPauseButton";
 export { AdminResetSlotsButton } from "./AdminResetSlotsButton";
 export { AdminEventHeader } from "./events/AdminEventHeader";
 export { AdminEventSelect } from "./events/AdminEventSelect";
+export { AdminDeleteEventButton } from "./events/AdminDeleteEventButton";
 export { AdminEditEventDialog } from "./events/AdminEditEventDialog";
 export { AdminSetActiveEventButton } from "./events/AdminSetActiveEventButton";
 export { AdminCreateEventForm } from "./events/AdminCreateEventForm";
