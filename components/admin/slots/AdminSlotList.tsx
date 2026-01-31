@@ -14,10 +14,10 @@ type AdminSlotListProps = {
   event: EventWithSlots["event"];
   slots: EventWithSlots["slots"];
   isPaused: boolean;
-  onSwapSlots: (slotIdA: string, slotIdB: string) => void;
-  onDeleteSlot: (slotId: string) => void;
-  onTogglePause: () => void;
-  onResetSlots: () => void;
+  onSwapSlots: (slotIdA: string, slotIdB: string) => Promise<void>;
+  onDeleteSlot: (slotId: string) => Promise<void>;
+  onTogglePause: () => Promise<void>;
+  onResetSlots: () => Promise<void>;
 };
 
 export function AdminSlotList({

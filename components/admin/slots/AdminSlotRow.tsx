@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowUp, ArrowDown, Trash2, Pencil } from "lucide-react";
+import { ArrowUp, ArrowDown, Trash2, Pencil, Loader2 } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
 import { AdminEditSlotDialog } from "./AdminEditSlotDialog";
 
@@ -26,9 +26,9 @@ type AdminSlotRowProps = {
   isCurrent: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
-  onSwapUp: () => void;
-  onSwapDown: () => void;
-  onDelete: () => void;
+  onSwapUp: () => Promise<void>;
+  onSwapDown: () => Promise<void>;
+  onDelete: () => Promise<void>;
 };
 
 export function AdminSlotRow({
@@ -42,6 +42,42 @@ export function AdminSlotRow({
 }: AdminSlotRowProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [isSwappingUp, setIsSwappingUp] = useState(false);
+  const [isSwappingDown, setIsSwappingDown] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isSwapping = isSwappingUp || isSwappingDown;
+
+  async function handleSwapUp() {
+    if (isSwapping) return;
+    setIsSwappingUp(true);
+    try {
+      await onSwapUp();
+    } finally {
+      setIsSwappingUp(false);
+    }
+  }
+
+  async function handleSwapDown() {
+    if (isSwapping) return;
+    setIsSwappingDown(true);
+    try {
+      await onSwapDown();
+    } finally {
+      setIsSwappingDown(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (isDeleting) return;
+    setIsDeleting(true);
+    try {
+      await onDelete();
+      setDeleteConfirmOpen(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -52,24 +88,32 @@ export function AdminSlotRow({
           size="icon"
           variant="outline"
           className="h-9 w-9 shrink-0"
-          disabled={!canMoveUp}
+          disabled={!canMoveUp || isSwapping}
           title="Nach oben tauschen"
           aria-label="Nach oben tauschen"
-          onClick={onSwapUp}
+          onClick={handleSwapUp}
         >
-          <ArrowUp className="h-4 w-4" />
+          {isSwappingUp ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ArrowUp className="h-4 w-4" />
+          )}
         </Button>
         <Button
           type="button"
           size="icon"
           variant="outline"
           className="h-9 w-9 shrink-0"
-          disabled={!canMoveDown}
+          disabled={!canMoveDown || isSwapping}
           title="Nach unten tauschen"
           aria-label="Nach unten tauschen"
-          onClick={onSwapDown}
+          onClick={handleSwapDown}
         >
-          <ArrowDown className="h-4 w-4" />
+          {isSwappingDown ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ArrowDown className="h-4 w-4" />
+          )}
         </Button>
       </div>
         <div
@@ -117,7 +161,7 @@ export function AdminSlotRow({
         open={editOpen}
         onOpenChange={setEditOpen}
       />
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+      <Dialog open={deleteConfirmOpen} onOpenChange={(open) => !isDeleting && setDeleteConfirmOpen(open)}>
         <DialogContent showCloseButton={false} className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Slot entfernen?</DialogTitle>
@@ -130,17 +174,23 @@ export function AdminSlotRow({
             <Button
               variant="outline"
               onClick={() => setDeleteConfirmOpen(false)}
+              disabled={isDeleting}
             >
               Abbrechen
             </Button>
             <Button
               variant="destructive"
-              onClick={() => {
-                setDeleteConfirmOpen(false);
-                onDelete();
-              }}
+              onClick={handleDelete}
+              disabled={isDeleting}
             >
-              Entfernen
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Entfernen…
+                </>
+              ) : (
+                "Entfernen"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,22 +1,40 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Pause, Play } from "lucide-react";
+import { Loader2, Pause, Play } from "lucide-react";
 
 type AdminPauseButtonProps = {
   isPaused: boolean;
-  onToggle: () => void;
+  onToggle: () => Promise<void>;
 };
 
 export function AdminPauseButton({ isPaused, onToggle }: AdminPauseButtonProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleToggle() {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      await onToggle();
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Button
       type="button"
       variant={isPaused ? "default" : "outline"}
       size="sm"
       className="gap-1.5"
-      onClick={() => void onToggle()}
+      disabled={isLoading}
+      onClick={handleToggle}
       title={isPaused ? "Weiter" : "Pause"}
     >
-      {isPaused ? (
+      {isLoading ? (
+        <Loader2 className="size-4 animate-spin" aria-hidden />
+      ) : isPaused ? (
         <Play className="size-4" aria-hidden />
       ) : (
         <Pause className="size-4" aria-hidden />

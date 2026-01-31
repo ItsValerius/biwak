@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { deleteEvent } from "@/app/admin/actions";
 
 type AdminDeleteEventButtonProps = {
@@ -25,12 +25,19 @@ export function AdminDeleteEventButton({
 }: AdminDeleteEventButtonProps) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
-    const result = await deleteEvent(eventId);
-    if (result?.error) return;
-    setConfirmOpen(false);
-    router.refresh();
+    if (isDeleting) return;
+    setIsDeleting(true);
+    try {
+      const result = await deleteEvent(eventId);
+      if (result?.error) return;
+      setConfirmOpen(false);
+      router.refresh();
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
@@ -46,7 +53,7 @@ export function AdminDeleteEventButton({
       >
         <Trash2 className="size-4" />
       </Button>
-      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <Dialog open={confirmOpen} onOpenChange={(open) => !isDeleting && setConfirmOpen(open)}>
         <DialogContent showCloseButton={false} className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Event löschen?</DialogTitle>
@@ -57,14 +64,26 @@ export function AdminDeleteEventButton({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setConfirmOpen(false)}
+              disabled={isDeleting}
+            >
               Abbrechen
             </Button>
             <Button
               variant="destructive"
-              onClick={() => void handleDelete()}
+              onClick={handleDelete}
+              disabled={isDeleting}
             >
-              Löschen
+              {isDeleting ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Löschen…
+                </>
+              ) : (
+                "Löschen"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
