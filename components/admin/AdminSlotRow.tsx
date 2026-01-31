@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, Trash2 } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
 
 type Slot = {
@@ -17,6 +17,7 @@ type AdminSlotRowProps = {
   onSetCurrent: () => void;
   onSwapUp: () => void;
   onSwapDown: () => void;
+  onDelete: () => void;
 };
 
 export function AdminSlotRow({
@@ -27,6 +28,7 @@ export function AdminSlotRow({
   onSetCurrent,
   onSwapUp,
   onSwapDown,
+  onDelete,
 }: AdminSlotRowProps) {
   return (
     <div className="flex min-h-14 items-center gap-2 sm:min-h-16">
@@ -69,6 +71,17 @@ export function AdminSlotRow({
             <> · Tatsächlich: {formatTime(slot.actualStart)}</>
           )}
         </span>
+      </Button>
+      <Button
+        type="button"
+        size="icon"
+        variant="outline"
+        className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+        title="Slot entfernen"
+        aria-label="Slot entfernen"
+        onClick={onDelete}
+      >
+        <Trash2 className="h-4 w-4" />
       </Button>
     </div>
   );

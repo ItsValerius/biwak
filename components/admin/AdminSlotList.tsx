@@ -1,3 +1,10 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { AdminSlotRow } from "./AdminSlotRow";
 import type { EventWithSlots } from "@/lib/event/client";
 
@@ -6,6 +13,7 @@ type AdminSlotListProps = {
   slots: EventWithSlots["slots"];
   onSetCurrentSlot: (slotId: string) => void;
   onSwapSlots: (slotIdA: string, slotIdB: string) => void;
+  onDeleteSlot: (slotId: string) => void;
 };
 
 export function AdminSlotList({
@@ -13,17 +21,18 @@ export function AdminSlotList({
   slots,
   onSetCurrentSlot,
   onSwapSlots,
+  onDeleteSlot,
 }: AdminSlotListProps) {
   return (
-    <div className="space-y-2">
-      <h2 className="text-lg font-semibold">
-        Reihenfolge & Jetzt auf die Bühne
-      </h2>
-      <p className="text-muted-foreground text-sm">
-        Klicke auf einen Club für „Jetzt auf der Bühne“. Mit ↑/↓ die
-        Reihenfolge tauschen.
-      </p>
-      <div className="grid gap-2 sm:grid-cols-1">
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Reihenfolge & Jetzt auf die Bühne</CardTitle>
+        <CardDescription>
+          Klicke auf einen Club für „Jetzt auf der Bühne“. Mit ↑/↓ die
+          Reihenfolge tauschen. Mit dem Papierkorb-Symbol einen Slot entfernen.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2">
         {slots.map((slot, index) => (
           <AdminSlotRow
             key={slot.id}
@@ -34,9 +43,10 @@ export function AdminSlotList({
             onSetCurrent={() => onSetCurrentSlot(slot.id)}
             onSwapUp={() => onSwapSlots(slot.id, slots[index - 1]!.id)}
             onSwapDown={() => onSwapSlots(slot.id, slots[index + 1]!.id)}
+            onDelete={() => onDeleteSlot(slot.id)}
           />
         ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

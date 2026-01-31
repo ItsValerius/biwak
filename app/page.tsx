@@ -1,4 +1,4 @@
-import { EventBoard } from "@/components/event-board";
+import { EventBoard } from "@/components/event-board/EventBoard";
 import { getEventWithSlots } from "@/lib/event";
 
 

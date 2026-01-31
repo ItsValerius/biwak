@@ -1,5 +1,6 @@
 export {
   getEventWithSlots,
+  listEvents,
   type EventWithSlots,
   type SerializedSlot,
 } from "./service";

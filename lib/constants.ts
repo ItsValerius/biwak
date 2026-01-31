@@ -22,4 +22,8 @@ export const ERROR_MESSAGE = {
   SLOTS_SAME_EVENT: "Slots must belong to the same event",
   PASSWORD_REQUIRED: "password required",
   INVALID_PASSWORD: "Invalid password",
+  NAME_AND_LOCATION_REQUIRED: "Name and location are required",
+  INVALID_EVENT_DATA: "Invalid event data",
+  INVALID_SLOT_DATA: "Invalid slot data",
+  AT_LEAST_ONE_SLOT: "Add at least one schedule slot",
 } as const;

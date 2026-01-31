@@ -5,6 +5,7 @@ import { EVENT_STATUS } from "@/lib/constants";
 import {
   setCurrentSlot,
   swapSlots,
+  deleteSlot,
   togglePause,
 } from "./actions";
 import type { EventWithSlots } from "@/lib/event/client";
@@ -31,28 +32,30 @@ export function AdminDashboard({ event, slots }: AdminDashboardProps) {
     router.refresh();
   }
 
+  async function handleDeleteSlot(slotId: string) {
+    await deleteSlot(slotId);
+    router.refresh();
+  }
+
   async function handleTogglePause() {
     await togglePause(event.id);
     router.refresh();
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="mx-auto max-w-2xl space-y-6">
-        <AdminEventHeader event={event} />
-        <div className="space-y-3">
-          <AdminPauseButton
-            isPaused={isPaused}
-            onToggle={handleTogglePause}
-          />
-        </div>
-        <AdminSlotList
-          event={event}
-          slots={slots}
-          onSetCurrentSlot={handleSetCurrentSlot}
-          onSwapSlots={handleSwapSlots}
-        />
-      </div>
+    <div className="space-y-6">
+      <AdminEventHeader event={event} />
+      <AdminPauseButton
+        isPaused={isPaused}
+        onToggle={handleTogglePause}
+      />
+      <AdminSlotList
+        event={event}
+        slots={slots}
+        onSetCurrentSlot={handleSetCurrentSlot}
+        onSwapSlots={handleSwapSlots}
+        onDeleteSlot={handleDeleteSlot}
+      />
     </div>
   );
 }

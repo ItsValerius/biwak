@@ -5,6 +5,7 @@ import {
   getCurrentSlot,
   getNextSlots,
   getMinutesPastPlanned,
+  getMinutesSlotStartedLate,
   type GetEventResponse,
   type EventWithSlots,
 } from "@/lib/event/client";
@@ -16,7 +17,7 @@ import { EventBoardUpNext } from "./EventBoardUpNext";
 import { EventBoardFooter } from "./EventBoardFooter";
 
 const POLL_INTERVAL_MS = 10_000;
-const NEXT_SLOTS_COUNT = 3;
+const NEXT_SLOTS_COUNT = 2;
 
 const ERROR_NO_EVENT = "Kein Event.";
 const ERROR_LOAD_FAILED = "Fehler beim Laden.";
@@ -91,8 +92,10 @@ export function EventBoard({ initialData }: EventBoardProps) {
   const nextSlotDelayMinutes = nextSlot
     ? getMinutesPastPlanned(nextSlot.plannedStart, currentTime)
     : 0;
+  const currentSlotLateMinutes = getMinutesSlotStartedLate(currentSlot);
+  const delayMinutes = Math.max(nextSlotDelayMinutes, currentSlotLateMinutes);
   const nextSlotDelayLabel =
-    nextSlotDelayMinutes > 0 ? `+${nextSlotDelayMinutes} Min.` : null;
+    delayMinutes > 0 ? `+${delayMinutes} Min.` : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">

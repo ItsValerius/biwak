@@ -36,15 +36,14 @@ export function EventBoardUpNext({
             —
           </p>
         ) : (
-          <ul className="flex flex-col lg:grid lg:grid-cols-3 lg:gap-4 tv:gap-6">
+          <ul className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-4 tv:gap-6">
             {slots.map((slot, index) => (
               <li
                 key={slot.id}
-                className={`flex items-center justify-between py-4 lg:flex-col lg:items-start lg:rounded-xl lg:bg-secondary/30 lg:p-5 tv:rounded-2xl tv:p-8 ${
-                  index !== slots.length - 1
-                    ? "border-b border-border/50 lg:border-b-0"
-                    : ""
-                }`}
+                className={`flex items-center justify-between py-4 lg:flex-col lg:items-start lg:rounded-xl lg:bg-secondary/30 lg:p-5 tv:rounded-2xl tv:p-8 ${index !== slots.length - 1
+                  ? "border-b border-border/50 lg:border-b-0"
+                  : ""
+                  }`}
               >
                 <div className="flex items-center gap-3 lg:w-full lg:flex-col lg:items-start lg:gap-2 tv:gap-3">
                   <ChevronRight className="size-4 text-primary lg:size-5 lg:hidden tv:hidden" />

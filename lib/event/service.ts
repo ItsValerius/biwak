@@ -49,6 +49,19 @@ export async function getEventWithSlots(
   };
 }
 
+export async function listEvents(): Promise<
+  { id: string; name: string; location: string }[]
+> {
+  const rows = await db
+    .select({ id: events.id, name: events.name, location: events.location })
+    .from(events)
+    .orderBy(asc(events.name));
+  return eventSelectSchema
+    .pick({ id: true, name: true, location: true })
+    .array()
+    .parse(rows);
+}
+
 async function getFirstEventId(): Promise<string | null> {
   const [first] = await db.select({ id: events.id }).from(events).limit(1);
   return first?.id ?? null;

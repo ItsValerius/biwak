@@ -6,6 +6,7 @@ export {
   getCurrentSlot,
   getNextSlots,
   getMinutesPastPlanned,
+  getMinutesSlotStartedLate,
   formatTime,
   type Slot,
   type Event,
