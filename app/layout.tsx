@@ -12,11 +12,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
-  title: "Biwak – Karneval",
-  description: "Live-Programm für Karneval-Veranstaltungen",
+  metadataBase: new URL(siteUrl),
+  title: "Biwak - KG Knallköpp Golkrath",
+  description: "Live-Programmanzeige für den Biwak der KG Knallköpp Golkrath",
   icons: {
     icon: "/logo.png",
+  },
+  openGraph: {
+    type: "website",
+    title: "Biwak - KG Knallköpp Golkrath",
+    description: "Live-Programmanzeige für den Biwak der KG Knallköpp Golkrath",
+    siteName: "Biwak - KG Knallköpp Golkrath",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "KG Knallköpp Golkrath",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Biwak - KG Knallköpp Golkrath",
+    description: "Live-Programmanzeige für den Biwak der KG Knallköpp Golkrath",
+    images: ["/logo.png"],
   },
 };
 
