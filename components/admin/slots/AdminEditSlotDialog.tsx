@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Loader2 } from "lucide-react";
 import { updateSlot } from "@/app/admin/actions";
 import {
   formatDateTimeLocalBerlin,
@@ -128,7 +129,11 @@ export function AdminEditSlotDialog({
               className="w-full"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "…" : "Speichern"}
+              {form.formState.isSubmitting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Speichern"
+              )}
             </Button>
           </form>
         </Form>

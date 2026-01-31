@@ -27,7 +27,7 @@ import {
   formatDateTimeLocalBerlin,
   parseBerlinDateTimeLocalToIso,
 } from "@/lib/event/client";
-import { Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 
 const scheduleSlotSchema = z.object({
   clubName: z.string().min(1, "Club-Name ist erforderlich"),
@@ -171,7 +171,11 @@ export function AdminScheduleForm({
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "…" : "Programm speichern"}
+              {form.formState.isSubmitting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Programm speichern"
+              )}
             </Button>
           </form>
         </Form>

@@ -1,9 +1,10 @@
 "use client";
 
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { setActiveEvent, unsetActiveEvent } from "@/app/admin/actions";
-import { Radio, X } from "lucide-react";
+import { Loader2, Radio, X } from "lucide-react";
 
 type AdminSetActiveEventButtonProps = {
   eventId: string;
@@ -15,6 +16,7 @@ export function AdminSetActiveEventButton({
   isActive,
 }: AdminSetActiveEventButtonProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   async function handleSetActive() {
     await setActiveEvent(eventId);
@@ -31,10 +33,15 @@ export function AdminSetActiveEventButton({
       <Button
         variant="secondary"
         size="sm"
-        onClick={handleUnsetActive}
+        disabled={isPending}
+        onClick={() => startTransition(async () => { await handleUnsetActive(); })}
         className="gap-1.5"
       >
-        <X className="size-4" aria-hidden />
+        {isPending ? (
+          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+        ) : (
+          <X className="size-4 shrink-0" aria-hidden />
+        )}
         Von Startseite entfernen
       </Button>
     );
@@ -44,10 +51,15 @@ export function AdminSetActiveEventButton({
     <Button
       variant="outline"
       size="sm"
-      onClick={handleSetActive}
+      disabled={isPending}
+      onClick={() => startTransition(async () => { await handleSetActive(); })}
       className="gap-1.5"
     >
-      <Radio className="size-4" aria-hidden />
+      {isPending ? (
+        <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+      ) : (
+        <Radio className="size-4 shrink-0" aria-hidden />
+      )}
       Jetzt live anzeigen
     </Button>
   );

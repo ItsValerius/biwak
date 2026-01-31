@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { importSlotsFromCsv } from "@/app/admin/actions";
 import { formatDateLocalBerlin } from "@/lib/event/client";
-import { FileUp } from "lucide-react";
+import { FileUp, Loader2 } from "lucide-react";
 
 type AdminImportCsvProps = {
   eventId: string;
@@ -92,9 +92,11 @@ export function AdminImportCsv({ eventId, onSuccess }: AdminImportCsvProps) {
         </p>
       )}
       <Button type="submit" disabled={!csvText.trim() || submitting}>
-        {submitting ? "…" : (
+        {submitting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
           <>
-            <FileUp className="mr-2 size-4" />
+            <FileUp className="size-4" aria-hidden />
             Aus CSV importieren
           </>
         )}

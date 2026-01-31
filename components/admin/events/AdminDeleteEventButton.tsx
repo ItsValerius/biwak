@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { deleteEvent } from "@/app/admin/actions";
 
 type AdminDeleteEventButtonProps = {
@@ -25,6 +26,7 @@ export function AdminDeleteEventButton({
 }: AdminDeleteEventButtonProps) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
     const result = await deleteEvent(eventId);
@@ -57,14 +59,19 @@ export function AdminDeleteEventButton({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)} disabled={isPending}>
               Abbrechen
             </Button>
             <Button
               variant="destructive"
-              onClick={() => void handleDelete()}
+              disabled={isPending}
+              onClick={() => startTransition(async () => { await handleDelete(); })}
             >
-              Löschen
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+              ) : (
+                "Löschen"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

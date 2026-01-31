@@ -1,6 +1,8 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,13 +23,17 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? "…" : "Anmelden"}
+      {pending ? (
+        <Loader2 className="size-4 animate-spin" />
+      ) : (
+        "Anmelden"
+      )}
     </Button>
   );
 }
 
 export function AdminLoginForm({ action }: { action: LoginAction }) {
-  const [state, formAction] = useFormState(action, undefined);
+  const [state, formAction] = useActionState(action, undefined);
   const error = state && typeof state === "object" && "error" in state ? state.error : "";
 
   return (

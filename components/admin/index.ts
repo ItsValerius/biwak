@@ -1,4 +1,6 @@
 export { AdminLayout } from "./AdminLayout";
+export { AdminHeaderSkeleton } from "./AdminHeaderSkeleton";
+export { AdminContentSkeleton } from "./AdminContentSkeleton";
 export { AdminLoginForm } from "./AdminLoginForm";
 export { AdminNextButton } from "./AdminNextButton";
 export { AdminPauseButton } from "./AdminPauseButton";

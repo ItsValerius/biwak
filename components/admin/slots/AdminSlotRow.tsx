@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowUp, ArrowDown, Trash2, Pencil } from "lucide-react";
+import { ArrowUp, ArrowDown, Trash2, Pencil, Loader2 } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
 import { AdminEditSlotDialog } from "./AdminEditSlotDialog";
 
@@ -26,9 +27,9 @@ type AdminSlotRowProps = {
   isCurrent: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
-  onSwapUp: () => void;
-  onSwapDown: () => void;
-  onDelete: () => void;
+  onSwapUp: () => void | Promise<void>;
+  onSwapDown: () => void | Promise<void>;
+  onDelete: () => void | Promise<void>;
 };
 
 export function AdminSlotRow({
@@ -42,6 +43,7 @@ export function AdminSlotRow({
 }: AdminSlotRowProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   return (
     <>
@@ -52,10 +54,10 @@ export function AdminSlotRow({
           size="icon"
           variant="outline"
           className="h-9 w-9 shrink-0"
-          disabled={!canMoveUp}
+          disabled={!canMoveUp || isPending}
           title="Nach oben tauschen"
           aria-label="Nach oben tauschen"
-          onClick={onSwapUp}
+          onClick={() => startTransition(async () => { await onSwapUp(); })}
         >
           <ArrowUp className="h-4 w-4" />
         </Button>
@@ -64,10 +66,10 @@ export function AdminSlotRow({
           size="icon"
           variant="outline"
           className="h-9 w-9 shrink-0"
-          disabled={!canMoveDown}
+          disabled={!canMoveDown || isPending}
           title="Nach unten tauschen"
           aria-label="Nach unten tauschen"
-          onClick={onSwapDown}
+          onClick={() => startTransition(async () => { await onSwapDown(); })}
         >
           <ArrowDown className="h-4 w-4" />
         </Button>
@@ -96,6 +98,7 @@ export function AdminSlotRow({
           className="h-9 w-9 shrink-0"
           title="Slot bearbeiten"
           aria-label="Slot bearbeiten"
+          disabled={isPending}
           onClick={() => setEditOpen(true)}
         >
           <Pencil className="h-4 w-4" />
@@ -107,6 +110,7 @@ export function AdminSlotRow({
           className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
           title="Slot entfernen"
           aria-label="Slot entfernen"
+          disabled={isPending}
           onClick={() => setDeleteConfirmOpen(true)}
         >
           <Trash2 className="h-4 w-4" />
@@ -130,17 +134,25 @@ export function AdminSlotRow({
             <Button
               variant="outline"
               onClick={() => setDeleteConfirmOpen(false)}
+              disabled={isPending}
             >
               Abbrechen
             </Button>
             <Button
               variant="destructive"
+              disabled={isPending}
               onClick={() => {
-                setDeleteConfirmOpen(false);
-                onDelete();
+                startTransition(async () => {
+                  await onDelete();
+                  setDeleteConfirmOpen(false);
+                });
               }}
             >
-              Entfernen
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+              ) : (
+                "Entfernen"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

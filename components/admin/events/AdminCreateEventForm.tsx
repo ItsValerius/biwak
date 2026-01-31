@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Loader2 } from "lucide-react";
 import { createEvent } from "@/app/admin/actions";
 
 const createEventSchema = z.object({
@@ -103,7 +104,11 @@ export function AdminCreateEventForm({
               className="w-full"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "…" : "Event erstellen"}
+              {form.formState.isSubmitting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Event erstellen"
+              )}
             </Button>
           </form>
         </Form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,14 +11,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { RotateCcw } from "lucide-react";
+import { Loader2, RotateCcw } from "lucide-react";
 
 type AdminResetSlotsButtonProps = {
-  onReset: () => void;
+  onReset: () => void | Promise<void>;
 };
 
 export function AdminResetSlotsButton({ onReset }: AdminResetSlotsButtonProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  async function handleReset() {
+    startTransition(async () => {
+      await onReset();
+      setConfirmOpen(false);
+    });
+  }
 
   return (
     <>
@@ -44,17 +53,19 @@ export function AdminResetSlotsButton({ onReset }: AdminResetSlotsButtonProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)} disabled={isPending}>
               Abbrechen
             </Button>
             <Button
               variant="destructive"
-              onClick={() => {
-                setConfirmOpen(false);
-                onReset();
-              }}
+              disabled={isPending}
+              onClick={() => void handleReset()}
             >
-              Zurücksetzen
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+              ) : (
+                "Zurücksetzen"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
