@@ -1,7 +1,9 @@
-/** Parse CSV with header "name, time". Time can be "HH:mm", "HH:mm:ss", or full ISO. */
+import { parseBerlinDateTimeLocalToIso } from "@/lib/event/utils";
+
+/** Parse CSV with header "name, time". Time can be "HH:mm", "HH:mm:ss", or full ISO. Base date is "YYYY-MM-DD" in German local time. */
 export function parseScheduleCsv(
   csvText: string,
-  baseDate: Date
+  baseDateStr: string
 ): { slots: { clubName: string; plannedStart: string }[]; error?: string } {
   const lines = csvText
     .trim()
@@ -29,7 +31,7 @@ export function parseScheduleCsv(
     const name = clean(cells[nameIdx] ?? "");
     const timeStr = clean(cells[timeIdx] ?? "");
     if (!name) continue;
-    const plannedStart = parseTimeToIso(timeStr, baseDate);
+    const plannedStart = parseTimeToIso(timeStr, baseDateStr);
     if (!plannedStart) {
       return {
         slots: [],
@@ -65,7 +67,7 @@ export function parseCsvLine(line: string): string[] {
   return result;
 }
 
-export function parseTimeToIso(value: string, baseDate: Date): string | null {
+export function parseTimeToIso(value: string, baseDateStr: string): string | null {
   const v = value.trim();
   if (!v) return null;
   const timeOnly = v.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\s*([ap]m))?$/i);
@@ -77,9 +79,10 @@ export function parseTimeToIso(value: string, baseDate: Date): string | null {
     const am = (timeOnly[4] ?? "").toLowerCase() === "am";
     if (pm && h < 12) h += 12;
     if (am && h === 12) h = 0;
-    const d = new Date(baseDate);
-    d.setHours(h, m, s, 0);
-    return d.toISOString();
+    const timePart = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    const dateTimeLocal = `${baseDateStr}T${timePart}`;
+    const iso = parseBerlinDateTimeLocalToIso(dateTimeLocal);
+    return iso || null;
   }
   const asDate = new Date(v);
   if (!Number.isNaN(asDate.getTime())) return asDate.toISOString();

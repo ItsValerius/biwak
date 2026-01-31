@@ -23,6 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { updateSlot } from "@/app/admin/actions";
+import {
+  formatDateTimeLocalBerlin,
+  parseBerlinDateTimeLocalToIso,
+} from "@/lib/event/client";
 
 const editSlotSchema = z.object({
   clubName: z.string().min(1, "Club-Name ist erforderlich"),
@@ -30,20 +34,6 @@ const editSlotSchema = z.object({
 });
 
 type EditSlotValues = z.infer<typeof editSlotSchema>;
-
-function formatDateTimeLocal(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  const h = String(date.getHours()).padStart(2, "0");
-  const min = String(date.getMinutes()).padStart(2, "0");
-  return `${y}-${m}-${d}T${h}:${min}`;
-}
-
-function parseToDateTimeLocal(isoString: string): string {
-  const date = new Date(isoString);
-  return formatDateTimeLocal(date);
-}
 
 type AdminEditSlotDialogProps = {
   slot: { id: string; clubName: string; plannedStart: string };
@@ -63,7 +53,7 @@ export function AdminEditSlotDialog({
     resolver: zodResolver(editSlotSchema),
     defaultValues: {
       clubName: slot.clubName,
-      plannedStart: parseToDateTimeLocal(slot.plannedStart),
+      plannedStart: formatDateTimeLocalBerlin(slot.plannedStart),
     },
   });
 
@@ -71,14 +61,17 @@ export function AdminEditSlotDialog({
     if (open) {
       form.reset({
         clubName: slot.clubName,
-        plannedStart: parseToDateTimeLocal(slot.plannedStart),
+        plannedStart: formatDateTimeLocalBerlin(slot.plannedStart),
       });
     }
   }, [form, open, slot.id, slot.clubName, slot.plannedStart]);
 
   async function onSubmit(values: EditSlotValues) {
     setServerError(null);
-    const result = await updateSlot(slot.id, values);
+    const result = await updateSlot(slot.id, {
+      ...values,
+      plannedStart: parseBerlinDateTimeLocalToIso(values.plannedStart),
+    });
     if (result?.error) {
       setServerError(result.error);
     } else {

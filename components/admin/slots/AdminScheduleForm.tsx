@@ -23,6 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { createSlots } from "@/app/admin/actions";
+import {
+  formatDateTimeLocalBerlin,
+  parseBerlinDateTimeLocalToIso,
+} from "@/lib/event/client";
 import { Plus, Trash2 } from "lucide-react";
 
 const scheduleSlotSchema = z.object({
@@ -44,15 +48,6 @@ type AdminScheduleFormProps = {
   onSuccess?: () => void;
 };
 
-function formatDateTimeLocal(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  const h = String(date.getHours()).padStart(2, "0");
-  const min = String(date.getMinutes()).padStart(2, "0");
-  return `${y}-${m}-${d}T${h}:${min}`;
-}
-
 export function AdminScheduleForm({
   eventId,
   title = "Programm hinzufügen",
@@ -65,7 +60,7 @@ export function AdminScheduleForm({
 
   const defaultSlot = (): { clubName: string; plannedStart: string } => ({
     clubName: "",
-    plannedStart: formatDateTimeLocal(new Date()),
+    plannedStart: formatDateTimeLocalBerlin(new Date().toISOString()),
   });
 
   const form = useForm<ScheduleFormValues>({
@@ -82,7 +77,11 @@ export function AdminScheduleForm({
 
   async function onSubmit(values: ScheduleFormValues) {
     setServerError(null);
-    const result = await createSlots(eventId, values.slots);
+    const slotsWithIso = values.slots.map((s) => ({
+      ...s,
+      plannedStart: parseBerlinDateTimeLocalToIso(s.plannedStart),
+    }));
+    const result = await createSlots(eventId, slotsWithIso);
     if (result?.error) {
       setServerError(result.error);
     } else {

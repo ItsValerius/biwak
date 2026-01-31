@@ -13,6 +13,7 @@ import {
   updateSlotSchema,
 } from "@/lib/admin/schemas";
 import { parseScheduleCsv } from "@/lib/admin/csv-utils";
+import { formatDateLocalBerlin } from "@/lib/event/utils";
 import { ERROR_MESSAGE } from "@/lib/constants";
 import {
   requireAdmin,
@@ -93,16 +94,16 @@ export async function resetEventSlots(eventId: string) {
 export async function importSlotsFromCsv(
   eventId: string,
   csvText: string,
-  baseDateIso?: string
+  baseDateStr?: string
 ) {
   await requireAdmin();
 
-  const baseDate = baseDateIso ? new Date(baseDateIso) : new Date();
-  if (Number.isNaN(baseDate.getTime())) {
-    return { error: "Invalid base date." };
-  }
+  const dateOnly =
+    baseDateStr && /^\d{4}-\d{2}-\d{2}$/.test(baseDateStr)
+      ? baseDateStr
+      : formatDateLocalBerlin();
 
-  const parsed = parseScheduleCsv(csvText, baseDate);
+  const parsed = parseScheduleCsv(csvText, dateOnly);
   if (parsed.error) return { error: parsed.error };
 
   const schemaParsed = createSlotsSchema.safeParse({

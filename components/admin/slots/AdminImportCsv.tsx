@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { importSlotsFromCsv } from "@/app/admin/actions";
+import { formatDateLocalBerlin } from "@/lib/event/client";
 import { FileUp } from "lucide-react";
 
 type AdminImportCsvProps = {
@@ -18,17 +19,10 @@ Club Rot-Weiss, 14:00
 Närrische Garde, 14:15
 Tanzgruppe Blau, 14:30`;
 
-function formatDateLocal(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
 export function AdminImportCsv({ eventId, onSuccess }: AdminImportCsvProps) {
   const router = useRouter();
   const [csvText, setCsvText] = useState("");
-  const [baseDate, setBaseDate] = useState(formatDateLocal(new Date()));
+  const [baseDate, setBaseDate] = useState(formatDateLocalBerlin());
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
