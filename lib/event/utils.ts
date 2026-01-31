@@ -44,24 +44,30 @@ export type ScheduleDeviationBadge =
 
 /**
  * Computes the schedule deviation badge for the "Up Next" section.
- * - behind: slot started late or next slot's planned start is in the past
- * - ahead: slot started early or next slot's planned start is in the future
+ * - behind: slot started late or we're past next slot's planned start (overrun)
+ * - ahead: only when current slot actually started early (not when next slot is simply in the future)
  */
 export function getScheduleDeviationBadge(
   currentSlot: Slot | null,
   nextSlot: Slot | null,
   now: Date
 ): ScheduleDeviationBadge | null {
-  const minutes = [
-    nextSlot ? getMinutesPastPlanned(nextSlot.plannedStart, now) : null,
-    getMinutesSlotDeviation(currentSlot),
-  ].filter((v): v is number => v !== null);
+  const startDeviation = getMinutesSlotDeviation(currentSlot);
+  const overrun =
+    nextSlot !== null ? getMinutesPastPlanned(nextSlot.plannedStart, now) : null;
+    
+  const behindMinutes = Math.max(
+    0,
+    overrun !== null && overrun > 0 ? overrun : 0,
+    startDeviation > 0 ? startDeviation : 0
+  );
 
-  const behind = Math.max(0, ...minutes.filter((m) => m > 0));
-  const ahead = Math.min(0, ...minutes.filter((m) => m < 0));
-
-  if (behind > 0) return { label: `+${behind} Min.`, variant: "behind" };
-  if (ahead < 0) return { label: `${ahead} Min.`, variant: "ahead" };
+  if (behindMinutes > 0) {
+    return { label: `+${behindMinutes} Min.`, variant: "behind" };
+  }
+  if (startDeviation < 0) {
+    return { label: `${startDeviation} Min.`, variant: "ahead" };
+  }
   return null;
 }
 
