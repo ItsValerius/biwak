@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
+import type { ScheduleDeviationBadge } from "@/lib/event/client";
 import { DelayBadge } from "./DelayBadge";
 
 type Slot = {
@@ -11,12 +12,12 @@ type Slot = {
 
 type EventBoardUpNextProps = {
   slots: Slot[];
-  nextSlotDelayLabel: string | null;
+  scheduleDeviationBadge: ScheduleDeviationBadge | null;
 };
 
 export function EventBoardUpNext({
   slots,
-  nextSlotDelayLabel,
+  scheduleDeviationBadge,
 }: EventBoardUpNextProps) {
   return (
     <Card className="border-border bg-card tv:rounded-2xl">
@@ -25,8 +26,11 @@ export function EventBoardUpNext({
           <h3 className="text-sm font-medium uppercase tracking-wider text-muted-foreground lg:text-base tv:text-[clamp(1rem,1.5vw,1.75rem)]">
             Als Nächstes
           </h3>
-          {nextSlotDelayLabel && (
-            <DelayBadge label={nextSlotDelayLabel} />
+          {scheduleDeviationBadge && (
+            <DelayBadge
+              label={scheduleDeviationBadge.label}
+              variant={scheduleDeviationBadge.variant}
+            />
           )}
         </div>
       </CardHeader>

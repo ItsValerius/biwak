@@ -32,6 +32,39 @@ export function getMinutesSlotStartedLate(slot: Slot | null): number {
   return Math.max(0, minutes);
 }
 
+/** Minutes deviation: positive = started late, negative = started early, 0 if no actualStart. */
+export function getMinutesSlotDeviation(slot: Slot | null): number {
+  if (!slot?.actualStart) return 0;
+  return getMinutesPastPlanned(slot.plannedStart, new Date(slot.actualStart));
+}
+
+export type ScheduleDeviationBadge =
+  | { label: string; variant: "behind" }
+  | { label: string; variant: "ahead" };
+
+/**
+ * Computes the schedule deviation badge for the "Up Next" section.
+ * - behind: slot started late or next slot's planned start is in the past
+ * - ahead: slot started early or next slot's planned start is in the future
+ */
+export function getScheduleDeviationBadge(
+  currentSlot: Slot | null,
+  nextSlot: Slot | null,
+  now: Date
+): ScheduleDeviationBadge | null {
+  const minutes = [
+    nextSlot ? getMinutesPastPlanned(nextSlot.plannedStart, now) : null,
+    getMinutesSlotDeviation(currentSlot),
+  ].filter((v): v is number => v !== null);
+
+  const behind = Math.max(0, ...minutes.filter((m) => m > 0));
+  const ahead = Math.min(0, ...minutes.filter((m) => m < 0));
+
+  if (behind > 0) return { label: `+${behind} Min.`, variant: "behind" };
+  if (ahead < 0) return { label: `${ahead} Min.`, variant: "ahead" };
+  return null;
+}
+
 /** Format ISO time string as local German time (e.g. "14:30"). */
 export function formatTime(iso: string): string {
   return formatInTimeZone(new Date(iso), GERMAN_TIMEZONE, "HH:mm");

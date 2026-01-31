@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import {
   getCurrentSlot,
   getNextSlots,
-  getMinutesPastPlanned,
-  getMinutesSlotStartedLate,
+  getScheduleDeviationBadge,
   type GetEventResponse,
   type EventWithSlots,
 } from "@/lib/event/client";
@@ -109,13 +108,11 @@ export function EventBoard({ initialData }: EventBoardProps) {
   const nextSlots = getNextSlots(slots, event.currentSlotId, NEXT_SLOTS_COUNT);
   const isPaused = event.status === EVENT_STATUS.PAUSE_UMBAU;
   const nextSlot = nextSlots[0];
-  const nextSlotDelayMinutes = nextSlot
-    ? getMinutesPastPlanned(nextSlot.plannedStart, currentTime)
-    : 0;
-  const currentSlotLateMinutes = getMinutesSlotStartedLate(currentSlot);
-  const delayMinutes = Math.max(nextSlotDelayMinutes, currentSlotLateMinutes);
-  const nextSlotDelayLabel =
-    delayMinutes > 0 ? `+${delayMinutes} Min.` : null;
+  const scheduleDeviationBadge = getScheduleDeviationBadge(
+    currentSlot,
+    nextSlot ?? null,
+    currentTime
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -127,7 +124,7 @@ export function EventBoard({ initialData }: EventBoardProps) {
         />
         <EventBoardUpNext
           slots={nextSlots}
-          nextSlotDelayLabel={nextSlotDelayLabel}
+          scheduleDeviationBadge={scheduleDeviationBadge}
         />
         <EventBoardFooter lastUpdated={lastUpdated} />
       </div>

@@ -4,7 +4,7 @@
  */
 import { db } from "@/lib/db";
 import { events, scheduleSlots } from "@/lib/db/schema";
-import { eq, desc, lt, and } from "drizzle-orm";
+import { eq, desc, lt, and, isNotNull } from "drizzle-orm";
 import type { ScheduleSlot } from "@/lib/db/schema";
 
 export async function findEventById(eventId: string) {
@@ -32,7 +32,8 @@ export async function findPreviousSlotWithActualStart(
   const slot = await db.query.scheduleSlots.findFirst({
     where: and(
       eq(scheduleSlots.eventId, eventId),
-      lt(scheduleSlots.orderIndex, beforeOrderIndex)
+      lt(scheduleSlots.orderIndex, beforeOrderIndex),
+      isNotNull(scheduleSlots.actualStart),
     ),
     orderBy: desc(scheduleSlots.orderIndex),
   });
