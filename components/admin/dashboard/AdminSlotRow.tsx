@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { ArrowUp, ArrowDown, Trash2, Pencil, Loader2 } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
-import { AdminEditSlotDialog } from "./AdminEditSlotDialog";
+import { AdminEditSlotDialog } from "@/components/admin/slots/AdminEditSlotDialog";
 
 type Slot = {
   id: string;

@@ -1,19 +1,27 @@
-export { AdminLayout } from "./AdminLayout";
-export { AdminHeaderSkeleton } from "./AdminHeaderSkeleton";
-export { AdminContentSkeleton } from "./AdminContentSkeleton";
+export {
+  AdminLayout,
+  AdminHeaderSkeleton,
+  AdminContentSkeleton,
+} from "./layout";
 export { AdminLoginForm } from "./AdminLoginForm";
-export { AdminNextButton } from "./AdminNextButton";
-export { AdminPauseButton } from "./AdminPauseButton";
-export { AdminResetSlotsButton } from "./AdminResetSlotsButton";
-export { AdminEventHeader } from "./events/AdminEventHeader";
-export { AdminEventSelect } from "./events/AdminEventSelect";
-export { AdminDeleteEventButton } from "./events/AdminDeleteEventButton";
-export { AdminEditEventDialog } from "./events/AdminEditEventDialog";
-export { AdminSetActiveEventButton } from "./events/AdminSetActiveEventButton";
-export { AdminCreateEventForm } from "./events/AdminCreateEventForm";
-export { AdminSlotList } from "./slots/AdminSlotList";
-export { AdminSlotRow } from "./slots/AdminSlotRow";
-export { AdminAddSlotsDialog } from "./slots/AdminAddSlotsDialog";
-export { AdminEditSlotDialog } from "./slots/AdminEditSlotDialog";
-export { AdminScheduleForm } from "./slots/AdminScheduleForm";
-export { AdminImportCsv } from "./slots/AdminImportCsv";
+export {
+  AdminNextButton,
+  AdminPauseButton,
+  AdminResetSlotsButton,
+  AdminSlotList,
+  AdminSlotRow,
+} from "./dashboard";
+export {
+  AdminEventHeader,
+  AdminEventSelect,
+  AdminDeleteEventButton,
+  AdminEditEventDialog,
+  AdminSetActiveEventButton,
+  AdminCreateEventForm,
+} from "./events";
+export {
+  AdminAddSlotsDialog,
+  AdminEditSlotDialog,
+  AdminScheduleForm,
+  AdminImportCsv,
+} from "./slots";

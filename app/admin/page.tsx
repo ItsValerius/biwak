@@ -8,8 +8,8 @@ import {
   AdminHeaderSkeleton,
   AdminContentSkeleton,
 } from "@/components/admin";
-import { AdminHeaderMeta } from "@/components/admin/AdminHeaderMeta";
-import { AdminEventContent } from "@/components/admin/AdminEventContent";
+import { AdminHeaderMeta } from "@/components/admin/layout/AdminHeaderMeta";
+import { AdminEventContent } from "@/components/admin/events/AdminEventContent";
 import { Button } from "@/components/ui/button";
 
 export const runtime = "nodejs";

@@ -6,8 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AdminSlotRow } from "./AdminSlotRow";
-import { AdminPauseButton } from "@/components/admin/AdminPauseButton";
-import { AdminResetSlotsButton } from "@/components/admin/AdminResetSlotsButton";
+import { AdminPauseButton } from "./AdminPauseButton";
+import { AdminResetSlotsButton } from "./AdminResetSlotsButton";
 import type { EventWithSlots } from "@/lib/event/client";
 
 type AdminSlotListProps = {
