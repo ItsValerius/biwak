@@ -16,7 +16,7 @@ export const HTTP_STATUS = {
 
 export const ERROR_MESSAGE = {
   UNAUTHORIZED: "Unauthorized",
-  NO_EVENT: "No event found. Run db:seed first.",
+  NO_EVENT: "No event found",
   EVENT_NOT_FOUND: "Event not found",
   SLOT_NOT_FOUND: "Slot not found",
   SLOTS_SAME_EVENT: "Slots must belong to the same event",
