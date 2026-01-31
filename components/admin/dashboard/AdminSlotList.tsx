@@ -16,6 +16,7 @@ type AdminSlotListProps = {
   isPaused: boolean;
   onSwapSlots: (slotIdA: string, slotIdB: string) => void | Promise<void>;
   onDeleteSlot: (slotId: string) => void | Promise<void>;
+  onResetSlotActualStart: (slotId: string) => void | Promise<void>;
   onTogglePause: () => void | Promise<void>;
   onResetSlots: () => void | Promise<void>;
 };
@@ -26,6 +27,7 @@ export function AdminSlotList({
   isPaused,
   onSwapSlots,
   onDeleteSlot,
+  onResetSlotActualStart,
   onTogglePause,
   onResetSlots,
 }: AdminSlotListProps) {
@@ -58,6 +60,7 @@ export function AdminSlotList({
             onSwapUp={() => onSwapSlots(slot.id, slots[index - 1]!.id)}
             onSwapDown={() => onSwapSlots(slot.id, slots[index + 1]!.id)}
             onDelete={() => onDeleteSlot(slot.id)}
+            onResetActualStart={() => onResetSlotActualStart(slot.id)}
           />
         ))}
       </CardContent>

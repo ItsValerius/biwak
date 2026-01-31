@@ -7,6 +7,7 @@ import {
   createSlots as serviceCreateSlots,
   updateSlot as serviceUpdateSlot,
   resetSlotsActualStart as serviceResetSlotsActualStart,
+  resetSlotActualStart as serviceResetSlotActualStart,
 } from "@/lib/event";
 import {
   createSlotsSchema,
@@ -87,6 +88,13 @@ export async function createSlots(
 export async function resetEventSlots(eventId: string) {
   await requireAdmin();
   const result = await serviceResetSlotsActualStart(eventId);
+  if (result.error) return { error: result.error };
+  revalidate();
+}
+
+export async function resetSlotActualStart(slotId: string) {
+  await requireAdmin();
+  const result = await serviceResetSlotActualStart(slotId);
   if (result.error) return { error: result.error };
   revalidate();
 }

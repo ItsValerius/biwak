@@ -5,6 +5,6 @@
 import "server-only";
 
 import { cache } from "react";
-import { getEventWithSlots } from "./service";
+import { getEventWithSlots } from "./queries";
 
 export const getCachedEventWithSlots = cache(getEventWithSlots);

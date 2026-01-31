@@ -14,5 +14,6 @@ export {
   updateSlot,
   createSlots,
   resetEventSlots,
+  resetSlotActualStart,
   importSlotsFromCsv,
 } from "./slots";

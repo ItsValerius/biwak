@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowUp, ArrowDown, Trash2, Pencil, Loader2 } from "lucide-react";
+import { ArrowUp, ArrowDown, Trash2, Pencil, Loader2, RotateCcw } from "lucide-react";
 import { formatTime } from "@/lib/event/client";
 import { AdminEditSlotDialog } from "@/components/admin/slots/AdminEditSlotDialog";
 
@@ -30,6 +30,7 @@ type AdminSlotRowProps = {
   onSwapUp: () => void | Promise<void>;
   onSwapDown: () => void | Promise<void>;
   onDelete: () => void | Promise<void>;
+  onResetActualStart: () => void | Promise<void>;
 };
 
 export function AdminSlotRow({
@@ -40,6 +41,7 @@ export function AdminSlotRow({
   onSwapUp,
   onSwapDown,
   onDelete,
+  onResetActualStart,
 }: AdminSlotRowProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -102,6 +104,18 @@ export function AdminSlotRow({
           onClick={() => setEditOpen(true)}
         >
           <Pencil className="h-4 w-4" />
+        </Button>
+        <Button
+          type="button"
+          size="icon"
+          variant="outline"
+          className="h-9 w-9 shrink-0"
+          title="Tatsächliche Startzeit zurücksetzen"
+          aria-label="Tatsächliche Startzeit zurücksetzen"
+          disabled={isPending || !slot.actualStart}
+          onClick={() => startTransition(async () => { await onResetActualStart(); })}
+        >
+          <RotateCcw className="h-4 w-4" />
         </Button>
         <Button
           type="button"

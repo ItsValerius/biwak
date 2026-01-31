@@ -18,6 +18,7 @@ export {
   unsetActiveEvent,
   deleteEvent,
   resetSlotsActualStart,
+  resetSlotActualStart,
   type EventWithSlots,
   type SerializedSlot,
 } from "./service";
