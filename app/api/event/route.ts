@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getEventWithSlots } from "@/lib/event";
+import { getEventWithSlots } from "@/features/events";
 import { jsonError, jsonSuccess } from "@/lib/api";
 import { HTTP_STATUS, ERROR_MESSAGE } from "@/lib/constants";
 

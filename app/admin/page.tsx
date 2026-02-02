@@ -1,16 +1,16 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
-import { hasAdminSession } from "@/lib/auth";
+import { hasAdminSession } from "@/features/auth";
 import {
   AdminLayout,
   AdminCreateEventForm,
   AdminHeaderSkeleton,
   AdminContentSkeleton,
-} from "@/components/admin";
-import { AdminHeaderMeta } from "@/components/admin/layout/AdminHeaderMeta";
-import { AdminEventContent } from "@/components/admin/events/AdminEventContent";
-import { Button } from "@/components/ui/button";
+  AdminHeaderMeta,
+  AdminEventContent,
+} from "@/features/admin";
+import { Button } from "@/shared/ui/button";
 
 export const runtime = "nodejs";
 

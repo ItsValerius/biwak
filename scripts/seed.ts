@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { createEvent, createSlots } from "../lib/event";
+import { createEvent, createSlots } from "@/features/events";
 
 async function seed() {
   const eventResult = await createEvent({

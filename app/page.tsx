@@ -1,5 +1,5 @@
-import { EventBoard } from "@/components/event-board/EventBoard";
-import { getEventWithSlots } from "@/lib/event";
+import { EventBoard } from "@/features/event-board";
+import { getEventWithSlots } from "@/features/events";
 
 
 export default async function Home() {

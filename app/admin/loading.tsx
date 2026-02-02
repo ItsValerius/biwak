@@ -1,4 +1,4 @@
-import { AdminHeaderSkeleton, AdminContentSkeleton } from "@/components/admin";
+import { AdminHeaderSkeleton, AdminContentSkeleton } from "@/features/admin";
 
 export default function AdminLoading() {
   return (
