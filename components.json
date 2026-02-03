@@ -19,5 +19,7 @@
     "lib": "@/lib",
     "hooks": "@/shared/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@kg": "https://registry.knallkoepp-golkrath.de/r/{name}.json"
+  }
 }
